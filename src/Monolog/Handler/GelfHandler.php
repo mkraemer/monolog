@@ -54,7 +54,11 @@ class GelfHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $this->publisher->publish($record['formatted']);
+        try {
+            $this->publisher->publish($record['formatted']);
+        } catch (\Throwable $e) {
+            error_log('Could not publish gelf message: '.$e->getMessage());
+        }
     }
 
     /**
